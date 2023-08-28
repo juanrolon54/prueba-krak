@@ -8,80 +8,170 @@
             type="text/javascript"
             src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
         ></script>
-        <script src="https://www.google.com/recaptcha/api.js?render=6LfPu-AnAAAAAL22c22WI7lGoeMXjFnuIkk8CKuV"></script>
+        <script
+            src="https://www.google.com/recaptcha/api.js"
+            async
+            defer
+        ></script>
         <title>Prueba Krak</title>
     </head>
     <body class="bg-gray-300">
         <script>
-            let canSend = true
+            let canSubmit = false
 
             ;(function () {
                 emailjs.init('ck9zPDsmdkeGhwQge')
             })()
+
+            function formHandler(event) {
+                const btn = document.getElementById('submit-btn')
+                const form = document.getElementById('form')
+
+                event.preventDefault()
+
+                if (canSubmit) {
+                    btn.value = 'Enviando...'
+                    form.classList.add('animate-pulse')
+
+                    const serviceID = 'default_service'
+                    const templateID = 'template_o5f1c2q'
+
+                    emailjs
+                        .sendForm(
+                            serviceID,
+                            templateID,
+                            document.getElementById('form')
+                        )
+                        .then(
+                            () => {
+                                form.outerHTML = `
+                                <div
+                    class="p-8 border mt-4 border-gray-800 border-b-4 flex justify-between gap-4 max-w-2xl w-full bg-green-500 shadow-lg"
+                >
+                
+                <div>
+                    <h1 class="text-3xl tracking-wider font-bold">
+                        Formulario enviado con exito!
+                    </h1>
+                    <h2>Lo contactaremos en breve.</h2>
+                </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-16 h-16"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                    />
+                </svg>
+            </div>
+                                `
+                            },
+                            (err) => {
+                                form.outerHTML = `
+                                <div
+                class="p-8 border mt-4 text-white border-gray-800 border-b-4 flex justify-between gap-4 max-w-2xl w-full bg-red-600 shadow-lg"
+                id="error-div"
+            >
+                <div>
+                    <h1 class="text-3xl tracking-wider font-bold">
+                        No se pudo enviar su formulario
+                    </h1>
+                    <h2>Tuvimos problemas enviando su formulario.</h2>
+                    <button
+                        onClick="retryForm()"
+                        class="border-white text-sm px-2 py-1 border mt-4"
+                    >
+                        retry
+                    </button>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-16 h-16">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+</svg>
+            </div>
+                                `
+                            }
+                        )
+                        .finally(() => {
+                            allowSubmit = true
+                            btn.classList.remove('animate-pulse')
+                        })
+                }
+            }
+
+            function allowSubmit() {
+                const btn = document.getElementById('submit-btn')
+                btn.disabled = false
+
+                const disabledClasses = 'hover:cursor-not-allowed bg-gray-400'
+                btn.classList.remove(...disabledClasses.split(' '))
+
+                const enabledClasses =
+                    'bg-gray-800 shadow-md hover:bg-black hover:shadow-lg hover:-translate-y-0.5 transition-all hover:cursor-pointer'
+                enabledClasses.split(' ').forEach((className) => {
+                    btn.classList.add(className)
+                })
+                canSubmit = true
+            }
+
+            function errorOnCaptcha() {
+                const form = document.getElementById('form')
+
+                form.outerHTML = `
+                <div
+                class="p-8 border mt-4 text-white border-gray-800 border-b-4 flex justify-between gap-4 max-w-2xl w-full bg-red-600 shadow-lg"
+                id="error-div"
+            >
+                <div>
+                    <h1 class="text-3xl tracking-wider font-bold">
+                        No se pudo enviar su formulario
+                    </h1>
+                    <h2>Tuvimos problemas verificando su identidad.</h2>
+                    <button
+                        onClick="retryForm()"
+                        class="border-white text-sm px-2 py-1 border mt-4"
+                    >
+                        retry
+                    </button>
+                </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-16 h-16"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
+                    />
+                </svg>
+            </div>
+                `
+            }
+
+            function retryForm() {
+                window.location.reload()
+            }
 
             window.onload = function () {
                 document
                     .getElementById('form')
                     .addEventListener('submit', formHandler)
             }
-            function formHandler(event) {
-                event.preventDefault()
-                if (canSend) {
-                    canSend = false
-
-                    grecaptcha.ready(function () {
-                        const btn = document.getElementById('submit-button')
-
-                        btn.value = 'Enviando...'
-
-                        console.log('good')
-
-                        grecaptcha
-                            .execute(
-                                '6LfPu-AnAAAAAL22c22WI7lGoeMXjFnuIkk8CKuV',
-                                {
-                                    action: 'submit',
-                                }
-                            )
-                            .then(function (token) {
-                                const serviceID = 'default_service'
-                                const templateID = 'template_o5f1c2q'
-
-                                emailjs
-                                    .sendForm(
-                                        serviceID,
-                                        templateID,
-                                        document.getElementById('form')
-                                    )
-                                    .then(
-                                        () => {
-                                            btn.value = 'Enviado'
-                                            btn.style.backgroundColor = 'green'
-                                            btn.disabled = true
-
-                                            document
-                                                .getElementById('form')
-                                                .removeEventListener(
-                                                    'submit',
-                                                    formHandler
-                                                )
-                                        },
-                                        (err) => {
-                                            btn.value = 'Error'
-                                            btn.style.backgroundColor = 'red'
-                                        }
-                                    )
-                                    .finally(() => {
-                                        canSend = true
-                                    })
-                            })
-                    })
-                }
-            }
         </script>
-        <main class="p-16 flex justify-center gap-4">
+        <main class="p-16 flex flex-col items-center gap-4">
+            <h1 class="text-4xl font-semibold tracking-wide font-mono">
+                Formulario de Prueba
+            </h1>
             <form
-                method="post"
                 class="p-8 border mt-4 border-gray-800 border-b-4 flex flex-col gap-4 max-w-2xl w-full bg-white shadow-lg"
                 id="form"
             >
@@ -115,16 +205,26 @@
                         required
                         name="message"
                         placeholder="Aqui va su mensaje."
-                        class="w-full border border-gray-400 shadow-inner rounded py-1 px-4"
+                        class="w-full shadow-inner border border-gray-400 rounded py-1 px-4"
                         rows="4"
                     ></textarea>
                 </label>
-                <input
-                    type="submit"
-                    class="g-recaptcha mt-2 px-4 shadow-md hover:bg-black hover:shadow-lg hover:-translate-y-0.5 transition-all hover:cursor-pointer py-2 rounded w-fit self-end bg-gray-800 text-gray-200 font-bold uppercase tracking-wide"
-                    id="submit-button"
-                    value="Enviar"
-                />
+                <div class="flex justify-between">
+                    <div
+                        class="g-recaptcha mt-4"
+                        data-sitekey="6LdA9uAnAAAAAP2W7uSybkb_DjSvsZBXj9ZD3QRI"
+                        data-callback="allowSubmit"
+                        data-expired-callback="errorOnCaptcha"
+                        data-error-callback="errorOnCaptcha"
+                        id="captcha"
+                    ></div>
+                    <input
+                        type="submit"
+                        class="mt-2 px-4 hover:cursor-not-allowed py-2 rounded w-fit self-end bg-gray-400 text-gray-200 font-bold uppercase tracking-wide"
+                        id="submit-btn"
+                        value="Enviar"
+                    />
+                </div>
             </form>
         </main>
     </body>
