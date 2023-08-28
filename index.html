@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+        ></script>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <title>Prueba Krak</title>
+    </head>
+    <body>
+        <script>
+            function onSubmit(token) {
+                document.getElementById('demo-form').submit()
+                console.log(token)
+            }
+
+            ;(function () {
+                // https://dashboard.emailjs.com/admin/account
+                emailjs.init('YOUR_PUBLIC_KEY')
+            })()
+
+            // window.onload = function () {
+            //     document
+            //         .getElementById('contact-form')
+            //         .addEventListener('submit', function (event) {
+            //             event.preventDefault()
+            //             // generate a five digit number for the contact_number variable
+            //             this.contact_number.value = (Math.random() * 100000) | 0
+            //             // these IDs from the previous steps
+            //             emailjs
+            //                 .sendForm('contact_service', 'contact_form', this)
+            //                 .then(
+            //                     function () {
+            //                         console.log('SUCCESS!')
+            //                     },
+            //                     function (error) {
+            //                         console.log('FAILED...', error)
+            //                     }
+            //                 )
+            //         })
+            // }
+            //mt-4 px-4 shadow-md hover:bg-black hover:shadow-lg hover:-translate-y-0.5 transition-all hover:cursor-pointer py-2 rounded w-fit self-end bg-gray-800 text-gray-200 font-bold uppercase tracking-wide
+        </script>
+        <main class="p-16">
+            <h1>Prueba Krak</h1>
+            <form
+                class="p-8 border mt-4 border-gray-800 border-b-4 flex flex-col gap-4 max-w-2xl"
+                id="demo-form"
+            >
+                <label class="flex flex-col gap-1">
+                    <span class="text-sm font-bold text-gray-500">
+                        Nombre
+                    </span>
+                    <input
+                        class="shadow-inner border border-gray-400 rounded py-1 px-4"
+                        type="text"
+                        placeholder="Juan Ejemplo Rolon"
+                    />
+                </label>
+                <label class="flex flex-col gap-1">
+                    <span class="text-sm font-bold text-gray-500"> Mail </span>
+                    <input
+                        class="shadow-inner border border-gray-400 rounded py-1 px-4"
+                        type="email"
+                        placeholder="juan@ejemplo.com"
+                    />
+                </label>
+                <label class="flex flex-col gap-1">
+                    <span class="text-sm font-bold text-gray-500">
+                        Mensaje
+                    </span>
+                    <textarea
+                        placeholder="Aqui va su mensaje."
+                        class="w-full border border-gray-400 shadow-inner rounded py-1 px-4"
+                        rows="4"
+                    ></textarea>
+                </label>
+                <button
+                    class="g-recaptcha"
+                    data-sitekey="reCAPTCHA_site_key"
+                    data-callback="onSubmit"
+                    data-action="submit"
+                >
+                    Enviar
+                </button>
+            </form>
+        </main>
+    </body>
+</html>
